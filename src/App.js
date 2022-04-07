@@ -1,24 +1,20 @@
-import logo from './logo.svg';
+import VideoPlayer from './components/VideoPlayer';
+
 import './App.css';
+import Button from '@mui/material/Button';
+import DataAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <LocalizationProvider dateAdapter={DataAdapter}>
+      <div className="App">
+        <header className="App-header">
+          Welcome Tony! This is your V-Happy!
+        </header>
+        <VideoPlayer />
+      </div>
+    </LocalizationProvider>
   );
 }
 
