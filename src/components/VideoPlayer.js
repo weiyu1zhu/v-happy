@@ -39,20 +39,35 @@ function VideoPlayer() {
     <div>
       <h3>Video Player</h3>
       <div>
-        <select onChange={(e) => setCameraId(e.target.value)} value={cameraId}>
-          {Cameras.map((camera) => (
-            <option key={camera.id} value={camera.id}>
-              {camera.name}
-            </option>
-          ))}
-        </select>
-        <select
-          onChange={(e) => setVideoMode(e.target.value)}
-          value={videoMode}
-        >
-          <option value="live">Live</option>
-          <option value="historical">Historical</option>
-        </select>
+        <FormControl fullWidth>
+          <InputLabel id="camera-select-label"></InputLabel>
+          <Select
+            labelId="camera-select-label"
+            id="camera-select-label"
+            value={cameraId}
+            label="Camera"
+            onChange={(e) => setCameraId(e.target.value)}
+          >
+            {Cameras.map((camera) => (
+              <MenuItem value={camera.id}>
+                {camera.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="video-mode-select-label"></InputLabel>
+          <Select
+            labelId="video-mode-select-label"
+            id="video-mode-select-label"
+            value={videoMode}
+            label="Video Mode"
+            onChange={(e) => setVideoMode(e.target.value)}
+          >
+            <MenuItem value="live">Live</MenuItem>
+            <MenuItem value="historical">Historical</MenuItem>
+          </Select>
+        </FormControl>
         <div>
             <DateTimePicker
               renderInput={(props) => <TextField {...props} />}
