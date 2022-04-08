@@ -1,3 +1,4 @@
+import Profiles from "./components/Profiles";
 import VideoPlayer from './components/VideoPlayer';
 
 import './App.css';
@@ -8,8 +9,12 @@ import DataAdapter from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import IconButton from '@mui/material/IconButton';
+import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
-import Profiles from "./components/Profiles";
+
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -45,49 +50,83 @@ TabPanel.propTypes = {
 };
 
 class App extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            tabValue: 0,
-            users: []
-        };
-    }
+  constructor() {
+      super();
+      this.state = {
+          tabValue: 0,
+          anchorEl: null,
+          currentLevel: 'Common',
+          levels: ['Common', 'Tony'],
+          users: []
+      };
+  }
 
-    render() {
-        return <LocalizationProvider dateAdapter={DataAdapter}>
-            <div className="App">
-                <header className="App-header">
-                    Welcome Tony! This is your V-Happy!
-                </header>
+  render() {
+    return <LocalizationProvider dateAdapter={DataAdapter}>
+        <div className="App">
+          <div className="App-topper">
+            <header className="greeting-header">Welcome Tony! This is your V-Happy!</header>
+            <IconButton aria-label="settings-button" size="large"
+                        aria-controls={Boolean(this.state.anchorEl) ? 'level-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={Boolean(this.state.anchorEl) ? 'true' : undefined}
+                        onClick={(event) => {
+                          this.setState({anchorEl: event.currentTarget});
+                        }}
+                        style={{position: 'absolute', bottom: '50px', right: '50px'}}>
+              <BrightnessHighIcon fontSize="large" style={{color: 'white'}}></BrightnessHighIcon>
+            </IconButton>
+            <Menu id="level-menu"
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={() => {this.setState({anchorEl: null});}}
+                  MenuListProps={{
+                    'aria-labelledby': 'settings-button'
+                  }}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                  }}>
+              {this.state.levels.map((level) => (
+                <MenuItem onClick={() => {
+                  this.setState({anchorEl: level});
+                  this.setState({currentLevel: level});
+                }}>{level}</MenuItem>
+              ))}
+            </Menu>
+          </div>
 
-                <Box sx={{width: '100%'}}>
-                    <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                        <Tabs value={this.state.tabValue} onChange={(event, newValue) => {
+          <Box sx={{width: '100%'}}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider'}}>
+              <Tabs value={this.state.tabValue} onChange={(event, newValue) => {
                             this.setState({tabValue: newValue})
                         }} aria-label="four major components">
-                            <Tab label="Status" {...a11yProps(0)} style={{width: '25%'}}></Tab>
-                            <Tab label="Historical" {...a11yProps(1)} style={{width: '25%'}}></Tab>
-                            <Tab label="Video" {...a11yProps(2)} style={{width: '25%'}}></Tab>
-                            <Tab label="Profiles" {...a11yProps(3)} style={{width: '25%'}}></Tab>
-                        </Tabs>
-                    </Box>
-                    <TabPanel value={this.state.tabValue} index={0}>
-                        <VideoPlayer/>
-                    </TabPanel>
-                    <TabPanel value={this.state.tabValue} index={1}>
-                        <VideoPlayer/>
-                    </TabPanel>
-                    <TabPanel value={this.state.tabValue} index={2}>
-                        <VideoPlayer/>
-                    </TabPanel>
-                    <TabPanel value={this.state.tabValue} index={3}>
-                        <Profiles/>
-                    </TabPanel>
-                </Box>
-            </div>
-        </LocalizationProvider>
-    }
-
+                <Tab label="Status" {...a11yProps(0)} style={{width: '25%'}}></Tab>
+                <Tab label="Historical" {...a11yProps(1)} style={{width: '25%'}}></Tab>
+                <Tab label="Video" {...a11yProps(2)} style={{width: '25%'}}></Tab>
+                <Tab label="Profiles" {...a11yProps(3)} style={{width: '25%'}}></Tab>
+              </Tabs>
+            </Box>
+            <TabPanel value={this.state.tabValue} index={0}>
+              <VideoPlayer />
+            </TabPanel>
+            <TabPanel value={this.state.tabValue} index={1}>
+              <VideoPlayer />
+            </TabPanel>
+            <TabPanel value={this.state.tabValue} index={2}>
+              <VideoPlayer />
+            </TabPanel>
+            <TabPanel value={this.state.tabValue} index={3}>
+              <Profiles />
+            </TabPanel>
+          </Box>
+        </div>
+      </LocalizationProvider>
+  }
 }
 
 export default App;

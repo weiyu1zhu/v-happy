@@ -2,7 +2,7 @@
   height: 100%;
 }
 
-.App-header {
+.App-topper {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -11,6 +11,17 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.greeting-header {
+    position: absolute;
+    top: 40px;
+}
+
+.switch-level-button {
+  position: fixed;
+  bottom: 100px;
+  right: 100px;
 }
 
 .App-link {
