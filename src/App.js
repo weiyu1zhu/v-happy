@@ -52,69 +52,80 @@ TabPanel.propTypes = {
 };
 
 class App extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            tabValue: 0,
-            anchorEl: null,
-            currentUser: 'Tony',
-            users: {
-                "Tony": Tony,
-                "Guest": User.Default("Guest")
-            }
-        };
+  constructor() {
+    super();
+    this.state = {
+        tabValue: 0,
+        anchorEl: null,
+        currentUser: 'Tony',
+        users: {
+            "Tony": Tony,
+            "Guest": User.Default("Guest")
+        }
+    };
 
-        this.updateUsersProfile = this.updateUsersProfile.bind(this)
-    }
+    this.updateUsersProfile = this.updateUsersProfile.bind(this)
+  }
 
-    updateUsersProfile(users) {
-        console.log(users)
-    }
+  updateUsersProfile(users) {
+    console.log(users)
+}
 
-    render() {
-        return <LocalizationProvider dateAdapter={DataAdapter}>
-            <div className="App">
-                <div className="App-topper">
-                    <header className="greeting-header">Welcome {this.state.currentUser}! This is your V-Happy!</header>
-                    <IconButton aria-label="settings-button" size="large"
-                                aria-controls={Boolean(this.state.anchorEl) ? 'user-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={Boolean(this.state.anchorEl) ? 'true' : undefined}
-                                onClick={(event) => {
-                                    this.setState({anchorEl: event.currentTarget});
-                                }}
-                                style={{position: 'absolute', bottom: '50px', right: '50px'}}>
-                        <BrightnessHighIcon fontSize="large" style={{color: 'white'}}></BrightnessHighIcon>
-                    </IconButton>
-                    <Menu id="user-menu"
-                          anchorEl={this.state.anchorEl}
-                          open={Boolean(this.state.anchorEl)}
-                          onClose={() => {
-                              this.setState({anchorEl: null});
-                          }}
-                          MenuListProps={{
-                              'aria-labelledby': 'settings-button'
-                          }}
-                          anchorOrigin={{
-                              vertical: 'top',
-                              horizontal: 'right'
-                          }}
-                          transformOrigin={{
-                              vertical: 'bottom',
-                              horizontal: 'right'
-                          }}>
-                        {Object.entries(this.state.users).map(([userName, _]) => (
-                            <MenuItem onClick={() => {
-                                this.setState({anchorEl: null});
-                                this.setState({currentUser: userName});
-                            }}>{userName}</MenuItem>
-                        ))}
-                    </Menu>
-                </div>
+  componentDidMount() {
+    this.timer = setInterval(() => {
+      console.log('5 seconds');
+    }, 5000);
+  }
 
-                <Box sx={{width: '100%'}}>
-                    <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
-                        <Tabs value={this.state.tabValue} onChange={(event, newValue) => {
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
+
+  render() {
+    return <LocalizationProvider dateAdapter={DataAdapter}>
+        <div className="App">
+          <div className="App-topper">
+            <header className="greeting-header">Welcome {this.state.currentUser}! This is your V-Happy!</header>
+            <IconButton aria-label="settings-button" size="large"
+                        aria-controls={Boolean(this.state.anchorEl) ? 'user-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={Boolean(this.state.anchorEl) ? 'true' : undefined}
+                        onClick={(event) => {
+                          this.setState({anchorEl: event.currentTarget});
+                        }}
+                        style={{position: 'absolute', bottom: '50px', right: '50px'}}>
+              <BrightnessHighIcon fontSize="large" style={{color: 'white'}}></BrightnessHighIcon>
+            </IconButton>
+            <Menu id="user-menu"
+                  anchorEl={this.state.anchorEl}
+                  open={Boolean(this.state.anchorEl)}
+                  onClose={() => {
+                    this.setState({anchorEl: null});
+                  }}
+                  MenuListProps={{
+                    'aria-labelledby': 'settings-button'
+                  }}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right'
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right'
+                  }}>
+              {Object.entries(this.state.users).map(([userName, _]) => (
+                <MenuItem onClick={() => {
+                  this.setState({anchorEl: null});
+                  this.setState({currentUser: userName});
+                }}>{userName}</MenuItem>
+              ))}
+            </Menu>
+          </div>
+
+          <Box sx={{width: '100%'}}>
+            <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+              <Tabs value={this.state.tabValue} onChange={(event, newValue) => {
                             this.setState({tabValue: newValue})
                         }} aria-label="four major components">
                 <Tab label="Status" {...a11yProps(0)} style={{width: '25%'}}></Tab>
@@ -133,7 +144,7 @@ class App extends React.Component {
               <VideoPlayer />
             </TabPanel>
             <TabPanel value={this.state.tabValue} index={3}>
-              <Profiles currentUser={this.state.users[this.state.currentUser]} users={this.state.users} action={this.updateUsersProfile}/>
+            <Profiles currentUser={this.state.users[this.state.currentUser]} users={this.state.users} action={this.updateUsersProfile}/>
             </TabPanel>
           </Box>
         </div>
