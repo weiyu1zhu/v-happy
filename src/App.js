@@ -14,7 +14,7 @@ import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
-
+import {User} from "./utils/Classes";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -50,24 +50,27 @@ TabPanel.propTypes = {
 };
 
 class App extends React.Component {
-  constructor() {
-      super();
-      this.state = {
-          tabValue: 0,
-          anchorEl: null,
-          currentLevel: 'Common',
-          levels: ['Common', 'Tony'],
-          users: []
-      };
-  }
+     constructor() {
+        super();
+        this.state = {
+            tabValue: 0,
+            anchorEl: null,
+            currentUser: 'Guest',
+            users: {
+                "Tony": User.Default("Tony"),
+                "Guest": User.Default("Guest")
+            }
+        };
+    }
+
 
   render() {
     return <LocalizationProvider dateAdapter={DataAdapter}>
         <div className="App">
           <div className="App-topper">
-            <header className="greeting-header">Welcome Tony! This is your V-Happy!</header>
+            <header className="greeting-header">Welcome {this.state.currentUser}! This is your V-Happy!</header>
             <IconButton aria-label="settings-button" size="large"
-                        aria-controls={Boolean(this.state.anchorEl) ? 'level-menu' : undefined}
+                        aria-controls={Boolean(this.state.anchorEl) ? 'user-menu' : undefined}
                         aria-haspopup="true"
                         aria-expanded={Boolean(this.state.anchorEl) ? 'true' : undefined}
                         onClick={(event) => {
@@ -76,7 +79,7 @@ class App extends React.Component {
                         style={{position: 'absolute', bottom: '50px', right: '50px'}}>
               <BrightnessHighIcon fontSize="large" style={{color: 'white'}}></BrightnessHighIcon>
             </IconButton>
-            <Menu id="level-menu"
+            <Menu id="user-menu"
                   anchorEl={this.state.anchorEl}
                   open={Boolean(this.state.anchorEl)}
                   onClose={() => {this.setState({anchorEl: null});}}
@@ -91,11 +94,11 @@ class App extends React.Component {
                     vertical: 'bottom',
                     horizontal: 'right'
                   }}>
-              {this.state.levels.map((level) => (
+              {Object.entries(this.state.users).map(([userName, _]) => (
                 <MenuItem onClick={() => {
-                  this.setState({anchorEl: level});
-                  this.setState({currentLevel: level});
-                }}>{level}</MenuItem>
+                  this.setState({anchorEl: userName});
+                  this.setState({currentUser: userName});
+                }}>{userName}</MenuItem>
               ))}
             </Menu>
           </div>
