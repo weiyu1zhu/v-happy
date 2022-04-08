@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import React from 'react';
 import Profiles from "./components/Profiles";
+import {User} from "./utils/Classes";
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -49,7 +50,10 @@ class App extends React.Component {
         super();
         this.state = {
             tabValue: 0,
-            users: []
+            users: {
+                "Tony": User.Default("Tony"),
+                "Guest": User.Default("Guest")
+            }
         };
     }
 
@@ -57,7 +61,7 @@ class App extends React.Component {
         return <LocalizationProvider dateAdapter={DataAdapter}>
             <div className="App">
                 <header className="App-header">
-                    Welcome Tony! This is your V-Happy!
+                    Welcome {this.state.users["Tony"].name}! This is your V-Happy!
                 </header>
 
                 <Box sx={{width: '100%'}}>
