@@ -2,7 +2,7 @@ import Profiles from "./components/Profiles";
 import VideoPlayer from './components/VideoPlayer';
 import Status from './components/Status';
 import Historical from "./components/Historical";
-import {Sensors, HOST, USER_ID, USER_TOKEN} from './constants';
+import {Speakers, Sensors, HOST, USER_ID, USER_TOKEN} from './constants';
 
 import './App.css';
 import PropTypes from 'prop-types';
@@ -71,8 +71,9 @@ class App extends React.Component {
         users: {
             "Tony": Tony,
             "Guest": User.Default("Guest")
-        }
-    
+        },
+        audioFileData: null,
+        fileRef: React.createRef(null),
     };
 
     this.updateUsersProfile = this.updateUsersProfile.bind(this);
@@ -169,7 +170,28 @@ class App extends React.Component {
   }
 
   sendAlarm() {
-    console.log('send alarm audio file to speaker');
+    const endpoint = `${HOST}/audio/${Speakers[1].id}/upload?user=${USER_ID}&token=${USER_TOKEN}`;
+    const audioFileData = this.state.audioFileData;
+    if (audioFileData == null) {
+      return;
+    }
+    async function upload() {
+      try {
+        const resp = await fetch(endpoint,{
+          method: 'post',
+          body: audioFileData,
+        });
+        if (resp.ok) {
+          console.log('Successfullt send alarm audio');
+        } else {
+          const respText = await resp.text();
+          console.log(`Error message: ${respText}`);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    upload();
   }
 
   updateUsersProfile(users) {
@@ -184,6 +206,22 @@ class App extends React.Component {
 
   componentWillUnmount() {
     clearInterval(this.timer);
+  }
+
+  onFileUpload = event => {
+    event.preventDefault();
+    const fileInput = event.target.elements[0];
+    if (fileInput.length < 1) {
+      console.log("Error: You must select a file");
+      return;
+    }
+    try {
+      const formData = new FormData(event.target);
+      this.setState({audioFileData: formData});
+      this.state.audioFileData = formData;
+    } catch (e) {
+      console.log(e.message);
+    }
   }
 
   render() {
@@ -226,6 +264,14 @@ class App extends React.Component {
                 }}>{userName}</MenuItem>
               ))}
             </Menu>
+            <div style={{position: 'absolute', top: '100px', right: '50px'}}>
+                <form onSubmit={this.onFileUpload}>
+                  <div style={{fontSize: 24}}>
+                    <input name="audio" ref={this.state.fileRef} type="file" accept="audio/wav"/>
+                    <button>Upload</button>
+                  </div>
+                </form>
+            </div>
           </div>
 
           <Box sx={{width: '100%'}}>
