@@ -1,5 +1,6 @@
 import Profiles from "./components/Profiles";
 import VideoPlayer from './components/VideoPlayer';
+import Status from './components/Status';
 
 import './App.css';
 import PropTypes from 'prop-types';
@@ -115,7 +116,7 @@ class App extends React.Component {
               </Tabs>
             </Box>
             <TabPanel value={this.state.tabValue} index={0}>
-              <VideoPlayer />
+              <Status user={this.state.users[this.state.currentUser]}></Status>
             </TabPanel>
             <TabPanel value={this.state.tabValue} index={1}>
               <VideoPlayer />

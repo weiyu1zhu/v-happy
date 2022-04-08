@@ -55,7 +55,7 @@ class AirQualityIndex extends UniDirectionalParameters {
     }
 
     static Default() {
-        return new Noise(151, 301)
+        return new AirQualityIndex(151, 301)
     }
 }
 
