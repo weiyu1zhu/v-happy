@@ -18,7 +18,7 @@ function Historical() {
     const params = [
         {full_name: 'calibrated_temperature', short_name: 'Temperature'},
         {full_name: 'calibrated_humidity', short_name: 'Humidity'},
-        {full_name: 'usa_air_quality_index', short_name: 'Aiq Quality'},
+        {full_name: 'usa_air_quality_index', short_name: 'Air Quality'},
         {full_name: 'noise_level', short_name: 'Noise'},
     ]
     const [param_index, setParam] = useState(0);
