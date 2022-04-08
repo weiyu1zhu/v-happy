@@ -96,7 +96,7 @@ class App extends React.Component {
                   }}>
               {Object.entries(this.state.users).map(([userName, _]) => (
                 <MenuItem onClick={() => {
-                  this.setState({anchorEl: userName});
+                  this.setState({anchorEl: null});
                   this.setState({currentUser: userName});
                 }}>{userName}</MenuItem>
               ))}
