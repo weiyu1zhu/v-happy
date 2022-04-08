@@ -132,7 +132,7 @@ class Profiles extends Component {
                     <TextField
                         id="tempLowYellow"
                         label="Cold Warning (°C)"
-                        placeholder="emergency threshold for cold"
+                        placeholder="warning threshold for cold"
                         onChange={(e) => this.setState({"tempLowYellow": e.target.value})}
                         variant="standard"
                     />
