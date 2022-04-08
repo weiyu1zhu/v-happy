@@ -9,7 +9,7 @@ function StatusGrid(props) {
     const units = ['°C', '%', '', 'dB'];
 
     const colors = [lightGreen[400], yellow[700], red[500]];
-    const texts = ['Common', 'Warning!', 'Danger!'];
+    const texts = ['Safe', 'Warning!', 'Danger!'];
     const getColor = () => {
         if (threshold.isRed(value)) {
             return colors[2];

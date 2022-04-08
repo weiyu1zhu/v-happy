@@ -56,7 +56,7 @@ TabPanel.propTypes = {
 };
 
 const colors = [lightGreen[400], yellow[700], red[500]];
-const texts = ['Common', 'Warning!', 'Danger!'];
+const texts = ['Safe', 'Warning!', 'Danger!'];
 
 class App extends React.Component {
   constructor() {
@@ -195,7 +195,7 @@ class App extends React.Component {
   }
 
   updateUsersProfile(users) {
-    console.log(users)
+    this.setState({"users":users})
   }
 
   componentDidMount() {
