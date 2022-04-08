@@ -1,47 +1,47 @@
 
 class UniDirectionalParameters {
-    constructor(sev3, sev2) {
-        this.sev3 = sev3
-        this.sev2 = sev2
+    constructor(yellow, red) {
+        this.yellow = yellow
+        this.red = red
     }
 
-    isSev2(value) {
-        return value >= this.sev2
+    isRed(value) {
+        return value >= this.red
     }
 
-    isSev3(value) {
-        return value >= this.sev3 && value < this.sev2
+    isYellow(value) {
+        return value >= this.yellow && value < this.red
     }
 
     isNormal(value) {
-        return value < this.sev3
+        return value < this.yellow
     }
 }
 
 class BiDirectionalParameters {
-    constructor(lowSev2, lowSev3, highSev3, highSev2) {
-        this.lowSev2 = lowSev2
-        this.lowSev3 = lowSev3
-        this.highSev2 = highSev2
-        this.highSev3 = highSev3
+    constructor(lowRed, lowYellow, highYellow, highRed) {
+        this.lowRed = lowRed
+        this.lowYellow = lowYellow
+        this.highRed = highRed
+        this.highYellow = highYellow
     }
 
-    isSev2(value) {
-        return value <= this.lowSev2 || value >= this.highSev2
+    isRed(value) {
+        return value <= this.lowRed || value >= this.highRed
     }
 
-    isSev3(value) {
-        return (value > this.lowSev2 && value <= this.lowSev3) || (value >= this.highSev3 && value < this.highSev2)
+    isYellow(value) {
+        return (value > this.lowRed && value <= this.lowYellow) || (value >= this.highYellow && value < this.highRed)
     }
 
     isNormal(value) {
-        return this.lowSev3 < value && value < this.highSev3
+        return this.lowYellow < value && value < this.highYellow
     }
 }
 
 class Temperature extends BiDirectionalParameters { // in fahrenheit
-    constructor(coldSev2, coldSev3, hotSev3, hotSev2) {
-        super(coldSev2, coldSev3, hotSev3, hotSev2)
+    constructor(coldRed, coldYellow, hotYellow, hotRed) {
+        super(coldRed, coldYellow, hotYellow, hotRed)
     }
 
     static Default() {
@@ -50,8 +50,8 @@ class Temperature extends BiDirectionalParameters { // in fahrenheit
 }
 
 class AirQualityIndex extends UniDirectionalParameters {
-    constructor(aqiSev3, aqiSev2) {
-        super(aqiSev3, aqiSev2);
+    constructor(aqiYellow, aqiRed) {
+        super(aqiYellow, aqiRed);
     }
 
     static Default() {
@@ -60,8 +60,8 @@ class AirQualityIndex extends UniDirectionalParameters {
 }
 
 class Noise extends UniDirectionalParameters {
-    constructor(nSev3, nSev2) {
-        super(nSev3, nSev2);
+    constructor(nYellow, nRed) {
+        super(nYellow, nRed);
     }
 
     static Default() {
@@ -70,8 +70,8 @@ class Noise extends UniDirectionalParameters {
 }
 
 class Humidity extends BiDirectionalParameters { // in percentage
-    constructor(drySev2, drySev3, wetSev3, wetSev2) {
-        super(drySev2, drySev3, wetSev3, wetSev2);
+    constructor(dryRed, dryYellow, wetYellow, wetRed) {
+        super(dryRed, dryYellow, wetYellow, wetRed);
     }
 
     static Default() {
