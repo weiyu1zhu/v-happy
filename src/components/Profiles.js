@@ -38,7 +38,7 @@ class Profiles extends Component {
         let updatedUsers = {}
         Object.assign(updatedUsers, this.props.users)
         updatedUsers[this.state.name] =
-            new User(this.state.name, new Temperature(this.state.tempLowRed, this.state.tempLowYellow, this.state.tempHighYellow, this.state.tempHighRed), new AirQualityIndex(this.state.aqiYellow, this.state.aqiRed), new Noise(this.state.nYellow, this.state.nRed), new Humidity(this.state.humLowRed, this.state.humLowYellow, this.state.humHighYellow, this.state.humHighRed))
+            new User(this.state.name, new Temperature(Number(this.state.tempLowRed), Number(this.state.tempLowYellow), Number(this.state.tempHighYellow), Number(this.state.tempHighRed)), new AirQualityIndex(Number(this.state.aqiYellow), Number(this.state.aqiRed)), new Noise(Number(this.state.nYellow), Number(this.state.nRed)), new Humidity(Number(this.state.humLowRed), Number(this.state.humLowYellow), Number(this.state.humHighYellow), Number(this.state.humHighRed)))
         this.props.action(updatedUsers)
     }
 
@@ -209,8 +209,6 @@ class Profiles extends Component {
                     />
                     <button type="submit">Submit</button>
                 </form>
-
-
             </div>
         )
     }
