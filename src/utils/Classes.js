@@ -39,13 +39,13 @@ class BiDirectionalParameters {
     }
 }
 
-class Temperature extends BiDirectionalParameters { // in fahrenheit
+class Temperature extends BiDirectionalParameters { // in C
     constructor(coldRed, coldYellow, hotYellow, hotRed) {
         super(coldRed, coldYellow, hotYellow, hotRed)
     }
 
     static Default() {
-        return new Temperature(-30, 59, 91, 108)
+        return new Temperature(-30, 15, 32, 42)
     }
 }
 

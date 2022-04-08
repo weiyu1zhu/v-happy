@@ -1,3 +1,5 @@
+import {AirQualityIndex, Humidity, Noise, Temperature, User} from "./utils/Classes";
+
 export const HOST = "https://hackathon.verkada.com";
 export const USER_TOKEN = process.env.REACT_APP_USER_TOKEN;
 export const USER_ID = process.env.REACT_APP_USER_ID;
@@ -39,3 +41,5 @@ export const Sensors = [
     id: "720329fc-f5fa-427c-a28b-c10c406c3617",
   },
 ];
+
+export const Tony = new User("Tony", new Temperature(-50, -30, 50, 100), new AirQualityIndex(300, 600), new Noise(90, 200), new Humidity(-100, 0, 80, 100))
