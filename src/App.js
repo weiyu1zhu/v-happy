@@ -1,6 +1,8 @@
 import Profiles from "./components/Profiles";
 import VideoPlayer from './components/VideoPlayer';
 import Status from './components/Status';
+import Historical from "./components/Historical";
+import {Sensors, HOST, USER_ID, USER_TOKEN} from './constants';
 
 import './App.css';
 import PropTypes from 'prop-types';
@@ -17,6 +19,8 @@ import MenuItem from '@mui/material/MenuItem';
 import React from 'react';
 import {User} from "./utils/Classes";
 import {Tony} from "./constants";
+import Avatar from '@mui/material/Avatar';
+import {red, yellow, lightGreen} from '@mui/material/colors';
 
 function TabPanel(props) {
     const {children, value, index, ...other} = props;
@@ -51,29 +55,130 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
+const colors = [lightGreen[400], yellow[700], red[500]];
+const texts = ['Common', 'Warning!', 'Danger!'];
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
         tabValue: 0,
         anchorEl: null,
+        sensorData: [0, 0, 0, 0],
+        statusColor: colors[0],
+        statusText: texts[0],
         currentUser: 'Tony',
         users: {
             "Tony": Tony,
             "Guest": User.Default("Guest")
         }
+    
     };
 
-    this.updateUsersProfile = this.updateUsersProfile.bind(this)
+    this.updateUsersProfile = this.updateUsersProfile.bind(this);
+    this.updateSensorData();
+  }
+
+  updateSensorData() {
+    let newSensorData = [...this.state.sensorData];
+    async function run() {
+      const end = Math.floor(Date.now() / 1000);
+      const start = end - 5;
+      const noises = [];
+      // Temperature
+      const resp = await fetch(
+        `${HOST}/sensors/${Sensors[0].id}/sensor_data?start=${start}&end=${end}&aggregateInterval=1s&user=${USER_ID}&token=${USER_TOKEN}`
+      );
+      if (resp.ok) {
+        const temps = [];
+        const json = await resp.json();
+        for (const data of json) {
+          temps.push(data['calibrated_temperature']);
+          noises.push(data['noise_level']);
+        }
+        const temp = temps.reduce((a, b) => a + b, 0) / temps.length;
+        newSensorData[0] = temp;
+      } else {
+        const text = await resp.text();
+        console.log(`Error message: ${text}`);
+      }
+      // Humidity
+      const resp_1 = await fetch(
+        `${HOST}/sensors/${Sensors[1].id}/sensor_data?start=${start}&end=${end}&aggregateInterval=1s&user=${USER_ID}&token=${USER_TOKEN}`
+      );
+      if (resp.ok) {
+        const humids = [];
+        const json = await resp_1.json();
+        for (const data of json) {
+          humids.push(data['calibrated_humidity']);
+          noises.push(data['noise_level']);
+        }
+        const humid = humids.reduce((a, b) => a + b, 0) / humids.length;
+        newSensorData[1] = humid;
+      } else {
+        const text = await resp_1.text();
+        console.log(`Error message: ${text}`);
+      }
+      // FOg machine, for air quality index
+      const resp_2 = await fetch(
+        `${HOST}/sensors/${Sensors[2].id}/sensor_data?start=${start}&end=${end}&aggregateInterval=1s&user=${USER_ID}&token=${USER_TOKEN}`
+      );
+      if (resp.ok) {
+        const json = await resp_2.json();
+        const aqis = [];
+        for (const data of json) {
+          aqis.push(data['usa_air_quality_index']);
+          noises.push(data['noise_level']);
+        }
+        const aqi = aqis.reduce((a, b) => a + b, 0) / aqis.length;
+        newSensorData[2] = aqi;
+      } else {
+        const text = await resp_2.text();
+        console.log(`Error message: ${text}`);
+      }
+      if (noises.length > 0) {
+        const noise = noises.reduce((a, b) => a + b, 0) / noises.length;
+        newSensorData[3] = noise;
+      }
+    }
+    run();
+    this.setState({sensorData: newSensorData});
+    this.performSafetyCheck();
+  }
+
+  performSafetyCheck() {
+    const temp = this.state.sensorData[0];
+    const humid = this.state.sensorData[1];
+    const aqi = this.state.sensorData[2];
+    const noise = this.state.sensorData[3];
+    const tempThreshold = this.state.users[this.state.currentUser].temperature;
+    const humidThreshold = this.state.users[this.state.currentUser].humidity;
+    const aqiThreshold = this.state.users[this.state.currentUser].airQuality;
+    const noiseThreshold = this.state.users[this.state.currentUser].noise;
+    if (tempThreshold.isRed(temp) || humidThreshold.isRed(humid) || aqiThreshold.isRed(aqi) || noiseThreshold.isRed(noise)) {
+      this.setState({statusColor: colors[2]});
+      this.setState({statusText: texts[2]});
+      this.sendAlarm();
+    } else if (tempThreshold.isYellow(temp) || humidThreshold.isYellow(humid) || aqiThreshold.isYellow(aqi) || noiseThreshold.isYellow(noise)) {
+      this.setState({statusColor: colors[1]});
+      this.setState({statusText: texts[1]});
+    } else {
+      this.setState({statusColor: colors[0]});
+      this.setState({statusText: texts[0]});
+    }
+  }
+
+  sendAlarm() {
+    console.log('send alarm audio file to speaker');
   }
 
   updateUsersProfile(users) {
     console.log(users)
-}
+  }
 
   componentDidMount() {
     this.timer = setInterval(() => {
-      console.log('5 seconds');
+      this.updateSensorData();
     }, 5000);
   }
 
@@ -81,12 +186,12 @@ class App extends React.Component {
     clearInterval(this.timer);
   }
 
-
   render() {
     return <LocalizationProvider dateAdapter={DataAdapter}>
         <div className="App">
           <div className="App-topper">
             <header className="greeting-header">Welcome {this.state.currentUser}! This is your V-Happy!</header>
+            <Avatar sx={{ bgcolor: this.state.statusColor, width: 360, height: 360, fontSize: 60}}>{this.state.statusText}</Avatar>
             <IconButton aria-label="settings-button" size="large"
                         aria-controls={Boolean(this.state.anchorEl) ? 'user-menu' : undefined}
                         aria-haspopup="true"
@@ -135,10 +240,10 @@ class App extends React.Component {
               </Tabs>
             </Box>
             <TabPanel value={this.state.tabValue} index={0}>
-              <Status user={this.state.users[this.state.currentUser]}></Status>
+              <Status user={this.state.users[this.state.currentUser]} sensorData={this.state.sensorData}></Status>
             </TabPanel>
             <TabPanel value={this.state.tabValue} index={1}>
-              <VideoPlayer />
+              <Historical />
             </TabPanel>
             <TabPanel value={this.state.tabValue} index={2}>
               <VideoPlayer />

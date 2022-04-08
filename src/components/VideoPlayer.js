@@ -32,7 +32,7 @@ function VideoPlayer() {
   }, []);
 
   return (
-    <div>
+    <div style={{textAlign: '-webkit-center'}}>
       <h3>Video Player</h3>
       <div style={{marginBottom: '20px'}}>
         <FormControl>

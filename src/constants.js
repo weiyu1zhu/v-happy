@@ -40,6 +40,10 @@ export const Sensors = [
     name: "Sensor 3",
     id: "720329fc-f5fa-427c-a28b-c10c406c3617",
   },
+  {
+    name: "Sensor 4",
+    id: "e4e9157f-d08c-49e2-a7b0-162d6a15285b",
+  }
 ];
 
 export const Tony = new User("Tony", new Temperature(-50, -30, 50, 100), new AirQualityIndex(300, 600), new Noise(90, 200), new Humidity(-100, 0, 80, 100))
